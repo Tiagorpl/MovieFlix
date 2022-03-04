@@ -20,8 +20,42 @@ public class MovieListViewModel extends ViewModel {
         return movieRepository.getMovies();
     }
 
+    public LiveData<List<Movie>> getMoviesPopular() {
+        return movieRepository.getMoviesPopular();
+    }
+
+    public LiveData<List<Movie>> getMoviesLatest() {
+        return movieRepository.getMoviesLatest();
+    }
+
+    public LiveData<List<Movie>> getMoviesTopRated() {
+        return movieRepository.getMoviesTopRated();
+    }
+
     public void searchMovieApi(String query, int page){
         movieRepository.searchMovieApi(query, page);
+    }
+
+    public void searchMovieApiPopular(int page){
+        movieRepository.searchMovieApiPopular(page);
+    }
+
+    public void searchMovieApiLatest(){
+        movieRepository.searchMovieApiLatest();
+    }
+
+    public void searchMovieApiTopRated(int page){
+        movieRepository.searchMovieApiTopRated(page);
+    }
+
+    public void searchNextPage(){
+        movieRepository.searchNextPage();
+    }
+    public void searchNextPagePopular(){
+        movieRepository.searchNextPagePopular();
+    }
+    public void searchNextPageTopRated(){
+        movieRepository.searchNextPageTopRated();
     }
 
 }

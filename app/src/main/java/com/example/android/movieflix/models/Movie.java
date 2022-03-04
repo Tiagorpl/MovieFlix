@@ -23,8 +23,12 @@ public class Movie implements Parcelable {
     private float popularity;
     @SerializedName("vote_average")
     private float vote_average;
+    @SerializedName("backdrop_path")
+    private String backdrop_path;
 
-    public Movie(int id, String poster_path, String overview, String release_date, String original_title, String original_language, float popularity, float vote_average) {
+
+
+    public Movie(int id, String poster_path, String overview, String release_date, String original_title, String original_language, float popularity, float vote_average, String backdrop_path) {
         this.id = id;
         this.poster_path = poster_path;
         this.overview = overview;
@@ -33,6 +37,7 @@ public class Movie implements Parcelable {
         this.original_language = original_language;
         this.popularity = popularity;
         this.vote_average = vote_average;
+        this.backdrop_path = backdrop_path;
     }
 
     protected Movie(Parcel in) {
@@ -44,6 +49,7 @@ public class Movie implements Parcelable {
         original_language = in.readString();
         popularity = in.readFloat();
         vote_average = in.readFloat();
+        backdrop_path = in.readString();
     }
 
     public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -122,6 +128,14 @@ public class Movie implements Parcelable {
         this.vote_average = vote_average;
     }
 
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -137,6 +151,7 @@ public class Movie implements Parcelable {
         parcel.writeString(original_language);
         parcel.writeFloat(popularity);
         parcel.writeFloat(vote_average);
+        parcel.writeString(backdrop_path);
     }
 }
 

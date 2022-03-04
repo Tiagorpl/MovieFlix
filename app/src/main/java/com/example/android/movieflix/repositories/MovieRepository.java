@@ -15,6 +15,8 @@ public class MovieRepository {
     private static MovieRepository instance;
 
 
+    private String mQuery;
+    private int mPageNumber;
 
     public static MovieRepository getInstance(){
         if (instance == null){
@@ -31,9 +33,59 @@ public class MovieRepository {
         return movieApiClient.getmMovies();
     }
 
+    public LiveData<List<Movie>> getMoviesPopular(){
+        return movieApiClient.getmMoviesPopular();
+    }
+
+    public LiveData<List<Movie>> getMoviesLatest(){
+        return movieApiClient.getmMoviesLatest();
+    }
+
+    public LiveData<List<Movie>> getMoviesTopRated(){
+        return movieApiClient.getmMoviesTopRated();
+    }
+
+
+
     public void searchMovieApi(String query, int page){
 
+        mQuery = query;
+        mPageNumber = page;
         movieApiClient.searchMoviesApi(query, page);
+
+
+    }
+    public void searchMovieApiPopular(int page){
+
+        mPageNumber = page;
+        movieApiClient.searchMoviesApiPopular(page);
+
+
+    }
+
+    public void searchMovieApiLatest(){
+        movieApiClient.searchMoviesApiLatest();
+
+    }
+
+    public void searchMovieApiTopRated(int page){
+        mPageNumber = page;
+        movieApiClient.searchMoviesApiTopRated(page);
+
+
+    }
+
+
+    public void searchNextPage(){
+        searchMovieApi(mQuery, mPageNumber + 1);
+    }
+
+    public void searchNextPagePopular(){
+        searchMovieApiPopular(mPageNumber + 1);
+    }
+
+    public void searchNextPageTopRated(){
+        searchMovieApiTopRated( mPageNumber + 1);
     }
 
 }
