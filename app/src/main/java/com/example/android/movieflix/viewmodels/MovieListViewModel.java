@@ -1,20 +1,44 @@
 package com.example.android.movieflix.viewmodels;
 
+import android.app.Application;
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.android.movieflix.models.Movie;
+import com.example.android.movieflix.repositories.MovieDbRepository;
 import com.example.android.movieflix.repositories.MovieRepository;
 
 import java.util.List;
 
-public class MovieListViewModel extends ViewModel {
+public class MovieListViewModel extends AndroidViewModel {
 
     private MovieRepository movieRepository;
+    private MovieDbRepository movieDbRepository;
+    private LiveData<List<Movie>> allMovies;
+    private MovieListViewModel instance;
 
-    public MovieListViewModel() {
+
+    public MovieListViewModel(Application application) {
+        super(application);
         movieRepository = MovieRepository.getInstance();
+        movieDbRepository = MovieDbRepository.getInstance(application);
+        allMovies = movieDbRepository.getAllFavoriteMovies();
     }
+
+    public MovieListViewModel getInstance(Application application) {
+        if (instance == null){
+            instance = new MovieListViewModel(application);
+        }
+        return instance;
+    }
+
+
+
+    public LiveData<List<Movie>> getFavorites(){return movieDbRepository.getAllFavoriteMovies();}
 
     public LiveData<List<Movie>> getMovies() {
         return movieRepository.getMovies();
@@ -32,24 +56,29 @@ public class MovieListViewModel extends ViewModel {
         return movieRepository.getMoviesTopRated();
     }
 
+
+
     public void searchMovieApi(String query, int page){
-        movieRepository.searchMovieApi(query, page);
+        movieRepository.searchMoviesApi(query, page);
     }
 
     public void searchMovieApiPopular(int page){
-        movieRepository.searchMovieApiPopular(page);
+        movieRepository.searchMoviesApiPopular(page);
     }
 
-    public void searchMovieApiLatest(){
-        movieRepository.searchMovieApiLatest();
+    public void searchMovieApiUpComing( int page){
+        movieRepository.searchMoviesApiUpComing(page);
     }
 
     public void searchMovieApiTopRated(int page){
-        movieRepository.searchMovieApiTopRated(page);
+        movieRepository.searchMoviesApiTopRated(page);
     }
 
     public void searchNextPage(){
         movieRepository.searchNextPage();
+        movieRepository.searchNextPagePopular();
+        movieRepository.searchNextPageTopRated();
+        movieRepository.searchNextPageUpComing();
     }
     public void searchNextPagePopular(){
         movieRepository.searchNextPagePopular();
@@ -58,4 +87,7 @@ public class MovieListViewModel extends ViewModel {
         movieRepository.searchNextPageTopRated();
     }
 
+    public void searchNextPageUpComing(){
+        movieRepository.searchNextPageUpComing();
+    }
 }

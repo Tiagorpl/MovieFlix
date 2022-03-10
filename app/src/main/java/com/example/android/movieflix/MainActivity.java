@@ -3,6 +3,7 @@ package com.example.android.movieflix;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -11,15 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.example.android.movieflix.adaptors.MovieAdapter;
 import com.example.android.movieflix.adaptors.OnMovieListener;
 import com.example.android.movieflix.models.Movie;
-import com.example.android.movieflix.utils.Configs;
 import com.example.android.movieflix.viewmodels.MovieListViewModel;
 
 import java.util.List;
@@ -29,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     private RecyclerView recyclerView;
     private MovieAdapter movieRecyclerAdapter;
     private MovieListViewModel movieListViewModel;
-    boolean isPopular = true;
+
 
 
     @Override
@@ -39,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
         SetupSearchView();
 
-
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         movieListViewModel = new ViewModelProvider(this).get(MovieListViewModel.class);
 
@@ -51,17 +51,49 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
 
         movieListViewModel.searchMovieApiPopular(1);
+    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_popular:
+                movieListViewModel.searchMovieApiPopular(1);
+                break;
 
+            case R.id.item_topRated:
+                movieListViewModel.searchMovieApiTopRated(1);
+                break;
 
+            case R.id.item_upComing:
+                movieListViewModel.searchMovieApiUpComing(1);
+                break;
 
+            case R.id.item_favorite:
+                movieListViewModel.getFavorites().observe(this, movies -> {
+                        movieRecyclerAdapter.setmMovies(movies);
+                        recyclerView.setAdapter(movieRecyclerAdapter);
+
+                });
+                break;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void observeTopRatedMovies() {
         movieListViewModel.getMoviesTopRated().observe(this, movies -> {
-            if (movies != null){
-                for(Movie movie : movies){
+            if (movies != null) {
+                for (Movie movie : movies) {
                     movieRecyclerAdapter.setmMovies(movies);
                 }
             }
@@ -71,9 +103,9 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     private void observeLatestMovies() {
 
         movieListViewModel.getMoviesLatest().observe(this, movies -> {
-            if (movies != null){
-                for(Movie movie : movies){
-                   movieRecyclerAdapter.setmMovies(movies);
+            if (movies != null) {
+                for (Movie movie : movies) {
+                    movieRecyclerAdapter.setmMovies(movies);
                 }
             }
         });
@@ -81,20 +113,20 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
     private void observePopularMovies() {
         movieListViewModel.getMoviesPopular().observe(this, movies -> {
-            if (movies != null){
-                for(Movie movie : movies){
-                   movieRecyclerAdapter.setmMovies(movies);
+            if (movies != null) {
+                for (Movie movie : movies) {
+                    movieRecyclerAdapter.setmMovies(movies);
                 }
             }
         });
 
     }
 
-    private void observeAnyChange(){
+    private void observeAnyChange() {
 
         movieListViewModel.getMovies().observe(this, movies -> {
-            if (movies != null){
-                for(Movie movie : movies){
+            if (movies != null) {
+                for (Movie movie : movies) {
                     movieRecyclerAdapter.setmMovies(movies);
                 }
             }
@@ -109,14 +141,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(movieRecyclerAdapter);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (!recyclerView.canScrollVertically(1)){
-                        movieListViewModel.searchNextPage();
-                }
-            }
-        });
+
 
     }
 
@@ -135,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     }
 
     //SearchView
-    private void SetupSearchView(){
+    private void SetupSearchView() {
         final SearchView searchView = findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -147,13 +172,6 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
             @Override
             public boolean onQueryTextChange(String newText) {
                 return false;
-            }
-        });
-
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isPopular = false;
             }
         });
     }

@@ -3,10 +3,15 @@ package com.example.android.movieflix.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity(tableName = "movie_favorite")
 public class Movie implements Parcelable {
 
+    @PrimaryKey
     @SerializedName("id")
     private int id;
     @SerializedName("poster_path")
@@ -19,8 +24,6 @@ public class Movie implements Parcelable {
     private String original_title;
     @SerializedName("original_language")
     private String original_language;
-    @SerializedName("popularity")
-    private float popularity;
     @SerializedName("vote_average")
     private float vote_average;
     @SerializedName("backdrop_path")
@@ -28,14 +31,13 @@ public class Movie implements Parcelable {
 
 
 
-    public Movie(int id, String poster_path, String overview, String release_date, String original_title, String original_language, float popularity, float vote_average, String backdrop_path) {
+    public Movie(int id, String poster_path, String overview, String release_date, String original_title, String original_language, float vote_average, String backdrop_path) {
         this.id = id;
         this.poster_path = poster_path;
         this.overview = overview;
         this.release_date = release_date;
         this.original_title = original_title;
         this.original_language = original_language;
-        this.popularity = popularity;
         this.vote_average = vote_average;
         this.backdrop_path = backdrop_path;
     }
@@ -47,7 +49,6 @@ public class Movie implements Parcelable {
         release_date = in.readString();
         original_title = in.readString();
         original_language = in.readString();
-        popularity = in.readFloat();
         vote_average = in.readFloat();
         backdrop_path = in.readString();
     }
@@ -112,14 +113,6 @@ public class Movie implements Parcelable {
         this.original_language = original_language;
     }
 
-    public float getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(float popularity) {
-        this.popularity = popularity;
-    }
-
     public float getVote_average() {
         return vote_average;
     }
@@ -149,7 +142,6 @@ public class Movie implements Parcelable {
         parcel.writeString(release_date);
         parcel.writeString(original_title);
         parcel.writeString(original_language);
-        parcel.writeFloat(popularity);
         parcel.writeFloat(vote_average);
         parcel.writeString(backdrop_path);
     }

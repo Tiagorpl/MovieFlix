@@ -1,22 +1,49 @@
 package com.example.android.movieflix.repositories;
 
+import android.app.Application;
+import android.os.AsyncTask;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.android.movieflix.database.MovieDatabase;
+import com.example.android.movieflix.database.MovieFavoriteDao;
 import com.example.android.movieflix.models.Movie;
-import com.example.android.movieflix.request.MovieApiClient;
+import com.example.android.movieflix.request.Servicey;
+import com.example.android.movieflix.response.MovieSearchResponse;
+import com.example.android.movieflix.utils.Configs;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MovieRepository {
 
-    private MovieApiClient movieApiClient;
+
+
+
+    //Search
+    private MutableLiveData<List<Movie>> mMovies;
+
+    //Popular
+    private MutableLiveData<List<Movie>> mMoviesPopular;
+    //Latest
+    private MutableLiveData<List<Movie>> mMoviesUpComing;
+    //Top_Rated
+    private MutableLiveData<List<Movie>> mMoviesTopRated;
+
+    private MutableLiveData<List<Movie>> mMoviesFavorite;
 
     private static MovieRepository instance;
 
 
+
     private String mQuery;
     private int mPageNumber;
+
 
     public static MovieRepository getInstance(){
         if (instance == null){
@@ -26,66 +53,162 @@ public class MovieRepository {
     }
 
     private MovieRepository(){
-         movieApiClient = MovieApiClient.getInstance();
-    }
-
-    public LiveData<List<Movie>> getMovies(){
-        return movieApiClient.getmMovies();
-    }
-
-    public LiveData<List<Movie>> getMoviesPopular(){
-        return movieApiClient.getmMoviesPopular();
-    }
-
-    public LiveData<List<Movie>> getMoviesLatest(){
-        return movieApiClient.getmMoviesLatest();
-    }
-
-    public LiveData<List<Movie>> getMoviesTopRated(){
-        return movieApiClient.getmMoviesTopRated();
-    }
-
-
-
-    public void searchMovieApi(String query, int page){
-
-        mQuery = query;
-        mPageNumber = page;
-        movieApiClient.searchMoviesApi(query, page);
-
-
-    }
-    public void searchMovieApiPopular(int page){
-
-        mPageNumber = page;
-        movieApiClient.searchMoviesApiPopular(page);
-
+        mMovies = new MutableLiveData<>();
+        mMoviesUpComing = new MutableLiveData<>();
+        mMoviesPopular = new MutableLiveData<>();
+        mMoviesTopRated = new MutableLiveData<>();
+        mMoviesFavorite = new MutableLiveData<>();
 
     }
 
-    public void searchMovieApiLatest(){
-        movieApiClient.searchMoviesApiLatest();
-
+    public LiveData<List<Movie>> getMovies() {
+        return mMovies;
     }
 
-    public void searchMovieApiTopRated(int page){
-        mPageNumber = page;
-        movieApiClient.searchMoviesApiTopRated(page);
-
-
+    public LiveData<List<Movie>> getMoviesPopular() {
+        return mMoviesPopular;
     }
+
+    public LiveData<List<Movie>> getMoviesLatest() {
+        return mMoviesUpComing;
+    }
+
+    public LiveData<List<Movie>> getMoviesTopRated() {
+        return mMoviesTopRated;
+    }
+
+
+
+
+
+    public void searchMoviesApi(String query, int pageNumber) {
+
+        Call<MovieSearchResponse> callSearch = Servicey.getMoviesApi().searchMovie(Configs.API_KEY, query, String.valueOf(pageNumber));
+        callSearch.enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+
+                if (response.code() == 200){
+                    List<Movie> list = new ArrayList<>(response.body().getMovies());
+                    if (pageNumber == 1){
+                        mMovies.postValue(list);
+                    }
+                    else {
+                        List<Movie> currentMovies = mMovies.getValue();
+                        currentMovies.addAll(list);
+                        mMovies.postValue(currentMovies);
+                    }
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
+                mMovies.postValue(null);
+            }
+        });
+    }
+
+    public void searchMoviesApiPopular(int pageNumber) {
+
+        Call<MovieSearchResponse> callPopular = Servicey.getMoviesApi().popularMovies(Configs.API_KEY, pageNumber);
+        callPopular.enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                if (response.code() == 200){
+                    List<Movie> list = new ArrayList<>(response.body().getMovies());
+                    if (pageNumber == 1){
+                        mMoviesPopular.postValue(list);
+                    }
+                    else {
+                        List<Movie> currentMovies = mMoviesPopular.getValue();
+                        currentMovies.addAll(list);
+                        mMoviesPopular.postValue(currentMovies);
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
+                mMoviesPopular.postValue(null);
+            }
+        });
+    }
+
+    public void searchMoviesApiUpComing(int pageNumber) {
+
+        Call<MovieSearchResponse> callUpComing = Servicey.getMoviesApi().upComingMovies(Configs.API_KEY, pageNumber);
+        callUpComing.enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                if (response.code() == 200){
+                    List<Movie> list = new ArrayList<>(response.body().getMovies());
+                    if (pageNumber == 1){
+                        mMoviesUpComing.postValue(list);
+                    }
+                    else {
+                        List<Movie> currentMovies = mMoviesUpComing.getValue();
+                        currentMovies.addAll(list);
+                        mMoviesUpComing.postValue(currentMovies);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
+                mMoviesUpComing.postValue(null);
+            }
+        });
+    }
+
+    public void searchMoviesApiTopRated(int pageNumber) {
+
+        Call<MovieSearchResponse> callTopRated = Servicey.getMoviesApi().topRatedMovies(Configs.API_KEY, pageNumber);
+        callTopRated.enqueue(new Callback<MovieSearchResponse>() {
+            @Override
+            public void onResponse(Call<MovieSearchResponse> call, Response<MovieSearchResponse> response) {
+                if (response.code() == 200){
+                    List<Movie> list = new ArrayList<>(response.body().getMovies());
+                    if (pageNumber == 1){
+                        mMoviesTopRated.postValue(list);
+                    }
+                    else {
+                        List<Movie> currentMovies = mMoviesTopRated.getValue();
+                        currentMovies.addAll(list);
+                        mMoviesTopRated.postValue(currentMovies);
+                    }
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieSearchResponse> call, Throwable t) {
+                mMoviesTopRated.postValue(null);
+            }
+        });
+    }
+
 
 
     public void searchNextPage(){
-        searchMovieApi(mQuery, mPageNumber + 1);
+        searchMoviesApi(mQuery, mPageNumber + 1);
     }
 
     public void searchNextPagePopular(){
-        searchMovieApiPopular(mPageNumber + 1);
+        searchMoviesApiPopular(mPageNumber + 1);
     }
 
     public void searchNextPageTopRated(){
-        searchMovieApiTopRated( mPageNumber + 1);
+        searchMoviesApiTopRated( mPageNumber + 1);
+    }
+
+    public void searchNextPageUpComing(){
+        searchMoviesApiUpComing( mPageNumber + 1);
     }
 
 }

@@ -15,7 +15,9 @@
         android:theme="@style/Theme.MovieFlix">
         <activity
             android:name=".MovieDetails"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            />
         <activity
             android:name=".MainActivity"
             android:exported="true">
