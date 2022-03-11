@@ -9,8 +9,10 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.android.movieflix.database.MovieDatabase;
 import com.example.android.movieflix.database.MovieFavoriteDao;
 import com.example.android.movieflix.models.Movie;
+import com.example.android.movieflix.models.Review;
 import com.example.android.movieflix.request.Servicey;
 import com.example.android.movieflix.response.MovieSearchResponse;
+import com.example.android.movieflix.response.MovieSearchReviews;
 import com.example.android.movieflix.utils.Configs;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import retrofit2.Response;
 
 public class MovieRepository {
 
-
+    private MutableLiveData<List<Review>> reviews;
 
 
     //Search
@@ -58,6 +60,7 @@ public class MovieRepository {
         mMoviesPopular = new MutableLiveData<>();
         mMoviesTopRated = new MutableLiveData<>();
         mMoviesFavorite = new MutableLiveData<>();
+        reviews = new MutableLiveData<>();
 
     }
 
@@ -109,6 +112,9 @@ public class MovieRepository {
             }
         });
     }
+
+
+
 
     public void searchMoviesApiPopular(int pageNumber) {
 
@@ -211,4 +217,32 @@ public class MovieRepository {
         searchMoviesApiUpComing( mPageNumber + 1);
     }
 
+
+
+    public void searchForReviews(int id){
+        Call<MovieSearchReviews> callReviews = Servicey.getMoviesApi().movieReviews(id,Configs.API_KEY);
+        callReviews.enqueue(new Callback<MovieSearchReviews>() {
+            @Override
+            public void onResponse(Call<MovieSearchReviews> call, Response<MovieSearchReviews> response) {
+                if (response.code() == 200){
+                    List<Review> list = new ArrayList<>(response.body().getReviews());
+                    reviews.postValue(list);
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieSearchReviews> call, Throwable t) {
+                    reviews.postValue(null);
+            }
+        });
+
+
+
+
+
+
+
+    }
 }
