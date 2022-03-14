@@ -1,12 +1,9 @@
 package com.example.android.movieflix.viewmodels;
 
 import android.app.Application;
-import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.android.movieflix.models.Movie;
 import com.example.android.movieflix.repositories.MovieDbRepository;
@@ -30,15 +27,16 @@ public class MovieListViewModel extends AndroidViewModel {
     }
 
     public MovieListViewModel getInstance(Application application) {
-        if (instance == null){
+        if (instance == null) {
             instance = new MovieListViewModel(application);
         }
         return instance;
     }
 
 
-
-    public LiveData<List<Movie>> getFavorites(){return movieDbRepository.getAllFavoriteMovies();}
+    public LiveData<List<Movie>> getFavorites() {
+        return movieDbRepository.getAllFavoriteMovies();
+    }
 
     public LiveData<List<Movie>> getMovies() {
         return movieRepository.getMovies();
@@ -57,37 +55,21 @@ public class MovieListViewModel extends AndroidViewModel {
     }
 
 
-
-    public void searchMovieApi(String query, int page){
+    public void searchMovieApi(String query, int page) {
         movieRepository.searchMoviesApi(query, page);
     }
 
-    public void searchMovieApiPopular(int page){
+    public void searchMovieApiPopular(int page) {
         movieRepository.searchMoviesApiPopular(page);
     }
 
-    public void searchMovieApiUpComing( int page){
+    public void searchMovieApiUpComing(int page) {
         movieRepository.searchMoviesApiUpComing(page);
     }
 
-    public void searchMovieApiTopRated(int page){
+    public void searchMovieApiTopRated(int page) {
         movieRepository.searchMoviesApiTopRated(page);
     }
 
-    public void searchNextPage(){
-        movieRepository.searchNextPage();
-        movieRepository.searchNextPagePopular();
-        movieRepository.searchNextPageTopRated();
-        movieRepository.searchNextPageUpComing();
-    }
-    public void searchNextPagePopular(){
-        movieRepository.searchNextPagePopular();
-    }
-    public void searchNextPageTopRated(){
-        movieRepository.searchNextPageTopRated();
-    }
 
-    public void searchNextPageUpComing(){
-        movieRepository.searchNextPageUpComing();
-    }
 }

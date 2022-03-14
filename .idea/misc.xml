@@ -4,9 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/activity_main.xml" value="0.264" />
-        <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/activity_movie_details.xml" value="0.23645833333333333" />
+        <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/activity_movie_details.xml" value="0.1" />
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/movie.xml" value="0.264" />
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/movie_list_item.xml" value="0.1" />
+        <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/movie_review_item.xml" value="0.11018518518518519" />
+        <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/movie_trailer_item.xml" value="0.1" />
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/popular_layout.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/layout/toolbar.xml" value="0.23645833333333333" />
         <entry key="..\:/Users/tiago/AndroidStudioProjects/MovieFlix/app/src/main/res/menu/menu.xml" value="0.23645833333333333" />

@@ -4,13 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.Observer;
+
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,7 +22,6 @@ import com.example.android.movieflix.adaptors.OnMovieListener;
 import com.example.android.movieflix.models.Movie;
 import com.example.android.movieflix.viewmodels.MovieListViewModel;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
@@ -30,16 +30,12 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     private MovieListViewModel movieListViewModel;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         SetupSearchView();
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         movieListViewModel = new ViewModelProvider(this).get(MovieListViewModel.class);
 
@@ -77,8 +73,8 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
             case R.id.item_favorite:
                 movieListViewModel.getFavorites().observe(this, movies -> {
-                        movieRecyclerAdapter.setmMovies(movies);
-                        recyclerView.setAdapter(movieRecyclerAdapter);
+                    movieRecyclerAdapter.setmMovies(movies);
+                    recyclerView.setAdapter(movieRecyclerAdapter);
 
                 });
                 break;
@@ -93,9 +89,9 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     private void observeTopRatedMovies() {
         movieListViewModel.getMoviesTopRated().observe(this, movies -> {
             if (movies != null) {
-                for (Movie movie : movies) {
-                    movieRecyclerAdapter.setmMovies(movies);
-                }
+
+                movieRecyclerAdapter.setmMovies(movies);
+
             }
         });
     }
@@ -104,9 +100,9 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
         movieListViewModel.getMoviesLatest().observe(this, movies -> {
             if (movies != null) {
-                for (Movie movie : movies) {
-                    movieRecyclerAdapter.setmMovies(movies);
-                }
+
+                movieRecyclerAdapter.setmMovies(movies);
+
             }
         });
     }
@@ -114,9 +110,9 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
     private void observePopularMovies() {
         movieListViewModel.getMoviesPopular().observe(this, movies -> {
             if (movies != null) {
-                for (Movie movie : movies) {
-                    movieRecyclerAdapter.setmMovies(movies);
-                }
+
+                movieRecyclerAdapter.setmMovies(movies);
+
             }
         });
 
@@ -126,21 +122,19 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
 
         movieListViewModel.getMovies().observe(this, movies -> {
             if (movies != null) {
-                for (Movie movie : movies) {
-                    movieRecyclerAdapter.setmMovies(movies);
-                }
+                movieRecyclerAdapter.setmMovies(movies);
+
             }
         });
     }
 
 
-    private void configureRecyclerView(){
+    private void configureRecyclerView() {
         movieRecyclerAdapter = new MovieAdapter(this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(movieRecyclerAdapter);
-
 
 
     }
@@ -154,12 +148,7 @@ public class MainActivity extends AppCompatActivity implements OnMovieListener {
         startActivity(intent);
     }
 
-    @Override
-    public void OnCategoryClick(String category) {
 
-    }
-
-    //SearchView
     private void SetupSearchView() {
         final SearchView searchView = findViewById(R.id.search_view);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

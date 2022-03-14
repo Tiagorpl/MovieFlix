@@ -5,6 +5,7 @@ import com.example.android.movieflix.models.Movie;
 import com.example.android.movieflix.models.MovieOutput;
 import com.example.android.movieflix.response.MovieSearchResponse;
 import com.example.android.movieflix.response.MovieSearchReviews;
+import com.example.android.movieflix.response.MovieSearchTrailers;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -32,5 +33,14 @@ public interface MoviesApi {
     @GET("3/movie/{movie_id}/reviews?")
     Call<MovieSearchReviews> movieReviews(
             @Path("movie_id") int movie_id, @Query("api_key") String apiKey);
+
+
+
+    @GET("3/movie/{movie_id}/videos?")
+    Call<MovieSearchTrailers> movieTrailers(
+            @Path("movie_id") int movie_id, @Query("api_key") String apiKey);
+
+
+
 
 }
